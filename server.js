@@ -1,6 +1,7 @@
 const express = require('express');
+// const morgan = require('morgan')
 const app = express()
-
+// app.use(morgan('dev'))
 
 // 1. Be Polite, Greet the User
 app.get('/greetings/:username', (req, res) => {
