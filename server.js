@@ -3,6 +3,7 @@ const express = require('express');
 const app = express()
 // app.use(morgan('dev'))
 
+
 // 1. Be Polite, Greet the User
 app.get('/greetings/:username', (req, res) => {
     const username = req.params.username;
@@ -13,12 +14,13 @@ res.send(`What a delight it is to see you once more, ${username}.`);
 // 2. Rolling the Dice
 app.get('/roll/:rollNumber', (req, res) => {
     const rollNumber = req.params.rollNumber
-    if (rollNumber !== number){
+    if (isNaN(rollNumber)){
         return res.send('You must specify a number')
-
-    } else {
-        res.send(`You rolled a ${rollNumber}.`)
-}})
+    }
+    else {
+        return res.send(`You rolled a ${rollNumber}.`)
+    }
+})
 
 
 // 3. I Want THAT One!
@@ -29,10 +31,11 @@ app.get('/collectibles/:index', (req, res) => {
         { name: 'autographed picture of a dog', price: 10 },
         { name: 'vintage 1970s yogurt SOLD AS-IS', price: 0.99 }
       ];
-    if (collectibles !== index){
+    if (isNaN(index)) {
         return res.send('This item is not yet in stock. Check back soon!')
-    } else {
-        res.send(`So, you want the ${collectibles.name}? For ${collectibles.price}, it can be yours!`)
+    } 
+    else {
+        res.send(`So, you want the ${collectibles[index].name}? For ${collectibles[index].price}, it can be yours!`)
     }
 })
 
@@ -40,9 +43,9 @@ app.get('/collectibles/:index', (req, res) => {
 // 4. Filter Shoes by Query Parameters
 app.get('/shoes', (req, res) => {
     
-    const min = req.params.min;
-    const max = req.params.max;
-    const type = req.params.type;
+    const min = req.query.min;
+    const max = req.query.max;
+    const type = req.query.type;
 
     const shoes = [
         { name: "Birkenstocks", price: 50, type: "sandal" },
@@ -54,16 +57,18 @@ app.get('/shoes', (req, res) => {
         { name: "Fifty-Inch Heels", price: 175, type: "heel" }
     ];
 
-    if (shoes.filter((shoe) => shoe.price <= max)){
-        
-    }
-    if (shoes.filter((shoe) => shoe.price >= min)){
+    let shoesFilter = shoes
 
+    if (max){
+        shoesFilter.filter((shoe) => shoe.price <= max)
     }
-    if (shoes.filter((shoe) => shoe.type === type)){
-
+    if (min){
+        shoesFilter.filter((shoe) => shoe.price >= min)
+     }
+    if (type){
+        shoesFilter.filter((shoe) => shoe.type === type)
     }
-    res.send(shoes)
+    res.send(shoesFilter)
 });
 
 
